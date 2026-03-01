@@ -15,6 +15,12 @@
 
 using namespace std;
 
+// I can see why this wasn't used anywhere in the release. It is O(n^2) in
+// the number of cells, and took my runtime from 5 minutes to >8 hours
+// (it's still going so not sure what the final damage will be).
+//
+// I think it should probably be implemented as a function that is called
+// only on a neighbourhood around the burning cell.
 std::vector<int> SpottingFBP(
     const std::unordered_map<int, CellsFBP>& Cells_Obj, 
     const std::vector<std::vector<int>>& coordCells, 										
