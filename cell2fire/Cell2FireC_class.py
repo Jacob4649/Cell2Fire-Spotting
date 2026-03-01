@@ -74,9 +74,9 @@ class Cell2FireC:
                    '--bbo' if (self.args.BBO) else '',
                    '--HarvestPlan', self.args.HCells if(self.args.HCells is not None) else '',
 				   '--verbose' if (self.args.verbose) else '',
-                   '--spot-angle', str(self.args.SpotAngle),
-                   '--spot-prob', str(self.args.SpotProb),
-                   '--spot-time', str(self.args.SpotTime)]
+                   '--spot-angle', str(self.args.Spot_Angle),
+                   '--spot-prob', str(self.args.Spot_Prob),
+                   '--spot-time', str(self.args.Spot_Time)]
         
         # Output log
         if self.args.OutFolder is not None:
@@ -120,9 +120,9 @@ class Cell2FireC:
                    '--bbo' if (self.args.BBO) else '',
                    '--HarvestPlan', HarvestPlanFile if(HarvestPlanFile is not None) else '',
 				   '--verbose' if (self.args.verbose) else '',
-                   '--spot-angle', str(self.args.SpotAngle),
-                   '--spot-prob', str(self.args.SpotProb),
-                   '--spot-time', str(self.args.SpotTime)]
+                   '--spot-angle', str(self.args.Spot_Angle),
+                   '--spot-prob', str(self.args.Spot_Prob),
+                   '--spot-time', str(self.args.Spot_Time)]
         
         # Output log
         if OutFolder is not None:

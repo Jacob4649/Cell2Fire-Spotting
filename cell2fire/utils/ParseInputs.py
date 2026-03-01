@@ -316,19 +316,19 @@ def make_parser():
                         dest="BurningLen",
                         type=float,
                         default=-1.0)
-    parser.add_argument("--SpotAngle",
+    parser.add_argument("--Spot-Angle",
                         help="Spotting angle (degrees)",
-                        dest="SpotAngle",
+                        dest="Spot_Angle",
                         type=float,
                         default=0.0)
-    parser.add_argument("--SpotProb",
+    parser.add_argument("--Spot-Prob",
                         help="Spotting probability at 0 distance",
-                        dest="SpotProb",
+                        dest="Spot_Prob",
                         type=float,
                         default=0.0)
-    parser.add_argument("--SpotTime",
+    parser.add_argument("--Spot-Time",
                         help="Time for spotting probability to reach 10% (minutes)",
-                        dest="SpotTime",
+                        dest="Spot_Time",
                         type=float,
                         default=0.0)
     return parser
