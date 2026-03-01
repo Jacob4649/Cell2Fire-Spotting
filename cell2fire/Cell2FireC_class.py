@@ -73,7 +73,10 @@ class Cell2FireC:
                    '--HFI-Threshold', str(self.args.HFI_Threshold),
                    '--bbo' if (self.args.BBO) else '',
                    '--HarvestPlan', self.args.HCells if(self.args.HCells is not None) else '',
-				   '--verbose' if (self.args.verbose) else '',]
+				   '--verbose' if (self.args.verbose) else '',
+                   '--spot-angle', str(self.args.SpotAngle),
+                   '--spot-prob', str(self.args.SpotProb),
+                   '--spot-time', str(self.args.SpotTime)]
         
         # Output log
         if self.args.OutFolder is not None:
@@ -116,7 +119,10 @@ class Cell2FireC:
                    '--HFI-Threshold', str(self.args.HFI_Threshold),
                    '--bbo' if (self.args.BBO) else '',
                    '--HarvestPlan', HarvestPlanFile if(HarvestPlanFile is not None) else '',
-				   '--verbose' if (self.args.verbose) else '']
+				   '--verbose' if (self.args.verbose) else '',
+                   '--spot-angle', str(self.args.SpotAngle),
+                   '--spot-prob', str(self.args.SpotProb),
+                   '--spot-time', str(self.args.SpotTime)]
         
         # Output log
         if OutFolder is not None:

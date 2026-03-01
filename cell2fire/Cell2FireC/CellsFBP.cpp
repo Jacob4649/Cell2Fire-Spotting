@@ -480,11 +480,6 @@ std::vector<int> CellsFBP::manageFire(int period, std::unordered_set<int> & Avai
 		}
 
 		// Now that we have finished with the spread to adjacent cells, we can consider spotting.
-		//
-		// For now we will do this with static, all 0 SpottingParams (which will force the
-		// spotting to immediately return an empty list and thus do nothing), but we
-		// will eventually want to get these from an arguments object.
-		static SpottingParams spotting_params { 0, 0, 0 };
 		auto spotting_msg_list = SpottingFBP(
 			Cells_Obj,
 			coordCells,
@@ -498,7 +493,7 @@ std::vector<int> CellsFBP::manageFire(int period, std::unordered_set<int> & Avai
 			// I actually have no clue whether this is right, and think there is a good
 			// chance it is not.
 			df_ptr->ws,
-			spotting_params,
+			args->spotting_params,
 			args->verbose
 		);
 		msg_list.insert(msg_list.end(), spotting_msg_list.begin(), spotting_msg_list.end());
@@ -770,11 +765,6 @@ std::vector<int> CellsFBP::manageFireBBO(int period, std::unordered_set<int> & A
 		}
 		
 		// Now that we have finished with the spread to adjacent cells, we can consider spotting.
-		//
-		// For now we will do this with static, all 0 SpottingParams (which will force the
-		// spotting to immediately return an empty list and thus do nothing), but we
-		// will eventually want to get these from an arguments object.
-		static SpottingParams spotting_params { 0, 0, 0 };
 		auto spotting_msg_list = SpottingFBP(
 			Cells_Obj,
 			coordCells,
@@ -788,7 +778,7 @@ std::vector<int> CellsFBP::manageFireBBO(int period, std::unordered_set<int> & A
 			// I actually have no clue whether this is right, and think there is a good
 			// chance it is not.
 			df_ptr->ws,
-			spotting_params,
+			args->spotting_params,
 			args->verbose
 		);
 		msg_list.insert(msg_list.end(), spotting_msg_list.begin(), spotting_msg_list.end());

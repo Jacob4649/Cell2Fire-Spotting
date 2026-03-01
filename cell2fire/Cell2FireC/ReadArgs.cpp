@@ -281,6 +281,32 @@ void parseArgs(int argc, char * argv[], arguments * args_ptr)
     }
 	else args_ptr->seed = dseed;
 	
+	// --spot-angle
+	char* spot_angle = getCmdOption(argv, argv + argc, "--spot-angle");
+	if (spot_angle){
+		printf("SpotAngle: %s \n", spot_angle);
+		// Not sure why we keep getting sz, doesn't seem like we use it anywhere, but
+		// everything else did it so I guess I will too.
+		args_ptr->spotting_params.spot_angle = std::stod(spot_angle, &sz); 
+	}
+	else args_ptr->spotting_params.spot_angle = 0;
+
+	// --spot-prob
+	char* spot_prob = getCmdOption(argv, argv + argc, "--spot-prob");
+	if (spot_prob){
+		printf("SpotProb: %s \n", spot_prob);
+		args_ptr->spotting_params.spot_0_prob = std::stod(spot_prob, &sz); 
+	}
+	else args_ptr->spotting_params.spot_0_prob = 0;
+
+	// --spot-time
+	char* spot_time = getCmdOption(argv, argv + argc, "--spot-time");
+	if (spot_time){
+		printf("SpotTime: %s \n", spot_time);
+		args_ptr->spotting_params.spot_10_time = std::stod(spot_time, &sz); 
+	}
+	else args_ptr->spotting_params.spot_10_time = 0;
+
 	// Populate structure
 	// Strings 
 	if (input_folder == &empty){
@@ -344,6 +370,9 @@ void printArgs(arguments args){
 	std::cout << "PromTuned: " << args.PromTuned << std::endl; 
 	std::cout << "BBOTuning: " << args.BBOTuning << std::endl; 
 	std::cout << "Statistics: " << args.Stats << std::endl; 
+	std::cout << "SpotAngle: " << args.spotting_params.spot_angle << std::endl;
+	std::cout << "SpotProb: " << args.spotting_params.spot_0_prob << std::endl;
+	std::cout << "SpotTime: " << args.spotting_params.spot_10_time << std::endl;
 	std::cout << "noOutput: " << args.NoOutput << std::endl; 
 	std::cout << "verbose: " << args.verbose << std::endl; 
 	std::cout << "seed: " << args.seed << std::endl; 
