@@ -327,7 +327,7 @@ def make_parser():
                         type=float,
                         default=0.0)
     parser.add_argument("--Spot-Time",
-                        help="Time for spotting probability to reach 10% (minutes)",
+                        help="Time for spotting",
                         dest="Spot_Time",
                         type=float,
                         default=0.0)
