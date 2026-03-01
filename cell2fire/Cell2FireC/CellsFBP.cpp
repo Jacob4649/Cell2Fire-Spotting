@@ -769,15 +769,6 @@ std::vector<int> CellsFBP::manageFireBBO(int period, std::unordered_set<int> & A
 						
 		}
 		
-		if (args->verbose){
-			printf("fireProgress Dict: ");
-			for (auto & nb : this->fireProgress){
-				std::cout << " " << nb.first << " : " << nb.second;
-			}
-			std::cout << std::endl;
-		}
-    }
-	
 		// Now that we have finished with the spread to adjacent cells, we can consider spotting.
 		//
 		// For now we will do this with static, all 0 SpottingParams (which will force the
@@ -800,7 +791,16 @@ std::vector<int> CellsFBP::manageFireBBO(int period, std::unordered_set<int> & A
 			spotting_params,
 			args->verbose
 		);
-		msg_list.insert(msg_list.end(), spotting_msg_list.begin(), spotting_msg_list.end());	
+		msg_list.insert(msg_list.end(), spotting_msg_list.begin(), spotting_msg_list.end());
+
+		if (args->verbose){
+			printf("fireProgress Dict: ");
+			for (auto & nb : this->fireProgress){
+				std::cout << " " << nb.first << " : " << nb.second;
+			}
+			std::cout << std::endl;
+		}
+    }	
 	
 	// If original is empty (no messages but fire is alive if aux_list is not empty)
 	if  (msg_list.size() == 0){
