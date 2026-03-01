@@ -465,6 +465,9 @@ std::vector<int> CellsFBP::manageFire(int period, std::unordered_set<int> & Avai
                 }*/
             }    
         
+			// Seems super redundant to check that repeat == -100 here when we JUST set it to
+			// -100 at the top of the if statement enclosing the loop, and haven't touched it since.
+			//
 			// Info for debugging status of the cell and fire evolution			
 			if (this->fireProgress[nb] < this->distToCenter[nb] && repeat == -100 && -100  != msg_list_aux[0]){
                     if (args->verbose){
@@ -475,6 +478,30 @@ std::vector<int> CellsFBP::manageFire(int period, std::unordered_set<int> & Avai
 			}
 						
 		}
+
+		// Now that we have finished with the spread to adjacent cells, we can consider spotting.
+		//
+		// For now we will do this with static, all 0 SpottingParams (which will force the
+		// spotting to immediately return an empty list and thus do nothing), but we
+		// will eventually want to get these from an arguments object.
+		static SpottingParams spotting_params { 0, 0, 0 };
+		auto spotting_msg_list = SpottingFBP(
+			Cells_Obj,
+			coordCells,
+			AvailSet,
+			// Like the argument below, I have no clue whether this is right,
+			// and there's a good chance it isn't. I think this is the wind
+			// direction, but I don't know whether it's the right one.
+			wdf_ptr->waz,
+			// I think this is wind speed? This MIGHT be the appropriate place to get this?
+			//
+			// I actually have no clue whether this is right, and think there is a good
+			// chance it is not.
+			df_ptr->ws,
+			spotting_params,
+			args->verbose
+		);
+		msg_list.insert(msg_list.end(), spotting_msg_list.begin(), spotting_msg_list.end());
 		
 		if (args->verbose){
 			printf("fireProgress Dict: ");
@@ -493,6 +520,33 @@ std::vector<int> CellsFBP::manageFire(int period, std::unordered_set<int> & Avai
 		}
 	
 		else{
+			// For the purposes of spotting we MAY not be burned here. If we are
+			// non-deterministic, I am unusre why we would EVER be burned here,
+			// but clearly it's a good idea as it was done in the first place so
+			// perhaps that's normal and OK. If we are deterministic then this makes sense,
+			// but the deterministic mode also implies a need for deterministic spotting.
+			//
+			// Now that I think about it, the most consistent implementation here is likely
+			// to leave this where we can burn out if we send no messages, and to
+			// implement a deterministic spotting. If we are burned, simply do not spot.
+			//
+			// This does seem strange to me though.
+			// 
+			// The more I look at this, the more I think maybe I'm not correctly
+			// understanding the behaviour of the repeat flag. I'll definitely have to
+			// look into it more. It seems that repeat starts at -99, and if some
+			// conditions about the ROS are met, is switched to -100 (no idea why
+			// those two values were chosen). When the repeat flag is -100, the aux list
+			// is updated correspondingly, and if the original message list is empty,
+			// the aux list is used instead and (I think) the original cell is copied back to it?
+			//
+			// This lets the cell continue to burn and thus continue to send messages?
+			//
+			// Ok you know what, I see. If we meet the HFI and ROS thresholds to send messages
+			// AT ALL, then we set repeat to -100 so we continue burning no matter what.
+			// Otherwise, we burn out. I guess it looks like this is how the HFI and ROS
+			// thresholds from the parameters are implemented, so this does make sense.
+			// There might be clearer ways to code it...
 			this->status = 2;   // we are done sending messages, call us burned
 		}
 	}

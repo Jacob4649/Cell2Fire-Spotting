@@ -15,21 +15,27 @@
 
 using namespace std;
 
-std::vector<int> SpottingFBP(std::unordered_map<int, CellsFBP> &  Cells_Obj, std::vector<std::vector<int>> & coordCells, 
-											std::unordered_set<int> & AvailSet, double WSD, double WSC, 
-											std::unordered_map<std::string, double> spottingParams, bool verbose) {
-    
-	// TODO data structures should be passed by reference   
+std::vector<int> SpottingFBP(
+    const std::unordered_map<int, CellsFBP>& Cells_Obj, 
+    const std::vector<std::vector<int>>& coordCells, 										
+    const std::unordered_set<int> & AvailSet, 
+    double WSD, 
+    double WSC, 
+    const SpottingParams& spottingParams,
+    bool verbose
+) {
+    // Early exit first.
+    if (spottingParams.spot_angle * spottingParams.spot_0_prob * spottingParams.spot_10_time * WSC == 0) {
+        return vector<int>();
+    }
+
+    // TODO data structures should be passed by reference   
     // TODO
     std::unordered_map<int, std::unordered_map<int, int>> Angles = std::unordered_map<int, std::unordered_map<int, int>>();
     std::unordered_map<int, std::unordered_map<int, int>> Distances = std::unordered_map<int, std::unordered_map<int, int>>();
     std::unordered_map<int, std::unordered_map<int, double>> SpotProb = std::unordered_map<int, std::unordered_map<int, double>>();
 
-    if (spottingParams["SPOTANGLE"] * spottingParams["SPOT0PROB"] * spottingParams["SPOT10TIME"] * WSC == 0) {
-        return vector<int>();
-    }
-
-    double WTolerance = spottingParams["SPOTANGLE"] / 2.0;
+    double WTolerance = spottingParams.spot_angle / 2.0;
     std::cout << "debug AvailSet size=" << AvailSet.size() << std::endl;
 
     double WA = WSD - WTolerance;
@@ -111,8 +117,8 @@ std::vector<int> SpottingFBP(std::unordered_map<int, CellsFBP> &  Cells_Obj, std
 
     // TODO: fix these later
     int cellsize = Cells_Obj.begin()->second.perimeter / 4.0;
-    double beta = spottingParams["SPOT0PROB"];
-    double tilde_d = spottingParams["SPOT10TIME"] * WSC / cellsize;
+    double beta = spottingParams.spot_0_prob;
+    double tilde_d = spottingParams.spot_10_time * WSC / cellsize;
     double alpha = std::log(.1) / tilde_d + std::log(beta) / tilde_d;
 
     for (auto & _c1 : Cells_Obj) {
@@ -168,8 +174,23 @@ CellsFBP.h:57:9: note: candidate: CellsFBP::CellsFBP(int, double, std::vector<in
         int c1 = _c1.first;
         for (auto & _c2 : SpotProb[c1]) {
 			int c2 = _c2.first;
+            // Lowkey maybe a static generator would be better than std::rand,
+            // but that's something for later.
+            //
+            // This should just be a static_cast on std::rand, not multiply by 1.0
             double random = 1.0 * std::rand() / RAND_MAX; 
-            if (SpotProb[c1][c2] > 0 && SpotProb[c1][c2] < random) {
+            // This looks wrong to me. If we are generating a random value
+            // and comparing it to the probability of spotting, 
+            // wouldn't we want to spot if the random value is LESS than the probability,
+            // not more?
+            // 
+            // If we have a 30% spotting probability between c1 and c2, there is a 30%
+            // chance of producing a random value less than 0.3. So wouldn't we want
+            // to spot in these cases?
+            //
+            // I made the change but for posterity, this is what was here before
+            // random > 0 && SpotProb[c1][c2] < random
+            if (random < SpotProb[c1][c2]) {
                 if (verbose) {
                     std::cout << "Spotting msg from " << c1 + 1 << " to " << c2; 
                 }
