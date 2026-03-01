@@ -10,16 +10,14 @@ import shutil
 import signal
 import subprocess
 import sys
-import cell2fire.utils.DataGeneratorC as DataGenerator
-import cell2fire.utils.ReadDataPrometheus as ReadDataPrometheus
-from cell2fire.utils.ParseInputs import InitCells
-from cell2fire.utils.Stats import *
-from cell2fire.utils.Heuristics import *
-import cell2fire  # for path finding
-p = str(cell2fire.__path__)
-l = p.find("'")
-r = p.find("'", l+1)
-cell2fire_path = p[l+1:r]
+import utils.DataGeneratorC as DataGenerator
+import utils.ReadDataPrometheus as ReadDataPrometheus
+from utils.ParseInputs import InitCells
+from utils.Stats import *
+from utils.Heuristics import *
+# We can find the path from file
+from pathlib import Path
+cell2fire_path = str(Path(__file__).parent)
 
 class Cell2FireC:
     # Constructor and initial run
